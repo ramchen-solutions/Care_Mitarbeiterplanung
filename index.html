@@ -179,9 +179,10 @@ const data = JSON.parse(localStorage.getItem(`arbeitszeiten_${year}`) || "[]");
 function changeYear() {
   saveInputsToLocalStorage(); // Speichern vor dem Wechsel
   const selectedYear = document.getElementById("yearSelect").value;
-  generateDates(selectedYear);
+  generateDates(selectedYear); // Neue Tabelle generieren
   loadInputsFromLocalStorage(); // Eingaben wiederherstellen
 }
+
 
 
     function jumpToToday() {
