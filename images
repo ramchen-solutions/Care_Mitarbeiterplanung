@@ -1,2 +1,25 @@
-<imgs://https://www.bing.com/images/search?view=detailV2&ccid=zG2GBxkX&id=3C2A67ACF3F70E08251B1AB519D43D84EDD2F971&thid=OIP.zG2GBxkXnTtW402G79nNfgHaB7&mediaurl=https%3a%2f%2framchen-care.de%2fwp-content%2fuploads%2f2023%2f11%2fOriginal-on-Transparent.png&cdnurl=https%3a%2f%2fth.bing.com%2fth%2fid%2fR.cc6d860719179d3b56e34d86efd9cd7e%3frik%3dcfnS7YQ91Bm1Gg%26pid%3dImgRaw%26r%3d0&exph=783&expw=3000&q=ramchen+care+logo&simid=608047115506090615&FORM=IRPRST&ck=1A7A5BD3BEF593F5DC00BEF838F950A3&selectedIndex=3&itb=1
-
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ramchen Care</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    img {
+      max-width: 80%;
+      height: auto;
+    }
+  </style>
+</head>
+<body>
+  https://ramchen-care.de/wp-content/uploads/2023/11/Original-on-Transparent.png
+</body>
+</html>
