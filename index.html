@@ -100,6 +100,33 @@
   </table>
 
   <script>
+    function saveInputsToLocalStorage() {
+  const rows = document.querySelectorAll("#Vertretungsplanung tbody tr");
+  const data = [];
+
+  rows.forEach(row => {
+    const date = row.getAttribute("data-date");
+    const inputs = Array.from(row.querySelectorAll("input")).map(input => input.value);
+    data.push({ date, inputs });
+  });
+
+  localStorage.setItem("arbeitszeiten", JSON.stringify(data));
+}
+
+function loadInputsFromLocalStorage() {
+  const data = JSON.parse(localStorage.getItem("arbeitszeiten") || "[]");
+
+  data.forEach(entry => {
+    const row = document.querySelector(`tr[data-date='${entry.date}']`);
+    if (row) {
+      const inputs = row.querySelectorAll("input");
+      entry.inputs.forEach((value, index) => {
+        if (inputs[index]) inputs[index].value = value;
+      });
+    }
+  });
+}
+
     function generateDates(year) {
       const tbody = document.getElementById('table-body');
       tbody.innerHTML = '';
@@ -187,7 +214,12 @@
       document.body.removeChild(downloadLink);
     }
 
+    window.addEventListener("beforeunload", saveInputsToLocalStorage);
+
+
     generateDates(2025);
+    loadInputsFromLocalStorage();
+
   </script>
 </body>
 </html>
