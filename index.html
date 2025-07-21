@@ -146,16 +146,21 @@
       if (row) {
         row.scrollIntoView({ behavior: 'smooth', block: 'center' });
       } else {
-        alert('Heutiges Datum ist nicht in der Liste vorhanden.');
+        alert('Heutiges Datum ist nicht in der Liste vorhanden. Bitte wechseln Sie das Jahr!');
       }
     }
 
-    function scrollToMonth(startDate) {
-      const row = document.querySelector(`tr[data-date='${startDate}']`);
+    function scrollToMonth(monthDay) {
+      const selectedYear = document.getElementById("yearSelect").value;
+      const fullDate = `${monthDay}.${selectedYear}`;
+      const row = document.querySelector(`tr[data-date='${fullDate}']`);
       if (row) {
         row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        alert(`Datum ${fullDate} nicht gefunden.`);
       }
     }
+
 
     function exportTableToCSV() {
       const rows = document.querySelectorAll("table tr");
