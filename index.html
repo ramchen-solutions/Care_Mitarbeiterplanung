@@ -1,1 +1,169 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mitarbeiter Verfügbarkeit</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 1rem; background: #f9f9f9; }
+    header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
+    h1 { font-size: 1.2rem; }
+    table { border-collapse: collapse; width: 100%; background: white; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+    th { background-color: #f2f2f2; }
+    input[type="text"] { width: 90%; padding: 4px; }
+    .controls { margin-bottom: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .controls button, .controls select { padding: 0.5rem 1rem; cursor: pointer; border: none; background: #007bff; color: white; border-radius: 4px; }
+    .controls select { background: white; color: black; border: 1px solid #ccc; }
+    .export-button { margin-bottom: 1rem; }
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr { display: block; }
+      thead tr { display: none; }
+      td { border: none; position: relative; padding-left: 50%; text-align: left; }
+      td::before {
+        position: absolute;
+        left: 10px;
+        width: 45%;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+      td:nth-of-type(1)::before { content: "Datum"; }
+      td:nth-of-type(2)::before { content: "Wochentag"; }
+      td:nth-of-type(3)::before { content: "Johannes"; }
+      td:nth-of-type(4)::before { content: "Matthias"; }
+      td:nth-of-type(5)::before { content: "Markus"; }
+      td:nth-of-type(6)::before { content: "Marcel"; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Verfügbarkeit der Mitarbeiter</h1>
+    <button onclick="jumpToToday()">Heute</button>
+    <select id="yearSelect" onchange="changeYear()">
+      <option value="2024">2024</option>
+      <option value="2025" selected>2025</option>
+      <option value="2026">2026</option>
+    </select>
+  </header>
+
+  <div class="controls">
+    <button onclick="scrollToMonth('01.01.2025')">Januar</button>
+    <button onclick="scrollToMonth('01.02.2025')">Februar</button>
+    <button onclick="scrollToMonth('01.03.2025')">März</button>
+    <button onclick="scrollToMonth('01.04.2025')">April</button>
+    <button onclick="scrollToMonth('01.05.2025')">Mai</button>
+    <button onclick="scrollToMonth('01.06.2025')">Juni</button>
+    <button onclick="scrollToMonth('01.07.2025')">Juli</button>
+    <button onclick="scrollToMonth('01.08.2025')">August</button>
+    <button onclick="scrollToMonth('01.09.2025')">September</button>
+    <button onclick="scrollToMonth('01.10.2025')">Oktober</button>
+    <button onclick="scrollToMonth('01.11.2025')">November</button>
+    <button onclick="scrollToMonth('01.12.2025')">Dezember</button>
+  </div>
+
+  <button class="export-button" onclick="exportTableToCSV()">Exportieren</button>
+
+  <table id="verfugbarkeit">
+    <thead>
+      <tr>
+        <th>Datum</th>
+        <th>Wochentag</th>
+        <th>Johannes</th>
+        <th>Matthias</th>
+        <th>Markus</th>
+        <th>Marcel</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+
+  <script>
+    function generateDates(year) {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = '';
+      const start = new Date(`${year}-01-01`);
+      const end = new Date(`${year}-12-31`);
+      const days = ['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+
+      for (let date = new Date(start); date <= end; date.setDate(date.getDate() + 1)) {
+        const day = date.getDay();
+        if (day === 0) continue; // Sonntag überspringen
+
+        const d = ('0' + date.getDate()).slice(-2);
+        const m = ('0' + (date.getMonth() + 1)).slice(-2);
+        const y = date.getFullYear();
+        const formattedDate = `${d}.${m}.${y}`;
+        const weekday = days[day];
+
+        const row = document.createElement('tr');
+        row.setAttribute('data-date', formattedDate);
+        row.innerHTML = `
+          <td>${formattedDate}</td>
+          <td>${weekday}</td>
+          <td><input type="text" /></td>
+          <td><input type="text" /></td>
+          <td><input type="text" /></td>
+          <td><input type="text" /></td>
+        `;
+        tbody.appendChild(row);
+      }
+    }
+
+    function changeYear() {
+      const selectedYear = document.getElementById("yearSelect").value;
+      generateDates(selectedYear);
+    }
+
+    function jumpToToday() {
+      const today = new Date();
+      const d = ('0' + today.getDate()).slice(-2);
+      const m = ('0' + (today.getMonth() + 1)).slice(-2);
+      const y = today.getFullYear();
+      const todayStr = `${d}.${m}.${y}`;
+      const row = document.querySelector(`tr[data-date='${todayStr}']`);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        alert('Heutiges Datum ist nicht in der Liste vorhanden.');
+      }
+    }
+
+    function scrollToMonth(startDate) {
+      const row = document.querySelector(`tr[data-date='${startDate}']`);
+      if (row) {
+        row.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    function exportTableToCSV() {
+      const rows = document.querySelectorAll("table tr");
+      const csv = [];
+      for (let row of rows) {
+        const cols = row.querySelectorAll("td, th");
+        const data = [];
+        for (let col of cols) {
+          if (col.querySelector("input")) {
+            data.push(col.querySelector("input").value);
+          } else {
+            data.push(col.innerText);
+          }
+        }
+        csv.push(data.join(","));
+      }
+      const csvFile = new Blob([csv.join("\n")], { type: "text/csv" });
+      const downloadLink = document.createElement("a");
+      downloadLink.download = "verfugbarkeit.csv";
+      downloadLink.href = window.URL.createObjectURL(csvFile);
+      downloadLink.style.display = "none";
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+      document.body.removeChild(downloadLink);
+    }
+
+    // Initialisierung
+    generateDates(2025);
+  </script>
+</body>
+</html>
 
