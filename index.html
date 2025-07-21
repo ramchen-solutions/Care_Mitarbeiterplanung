@@ -16,6 +16,8 @@
       max-width: 300px;
       height: auto;
     }
+    <button onclick="saveInputsToLocalStorage()">Speichern</button>
+
 
     body { font-family: Arial, sans-serif; margin: 0; padding: 1rem; background: #f9f9f9; }
     header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.5rem; }
@@ -232,6 +234,14 @@ function loadInputsFromLocalStorage() {
 
 
     generateDates(2025);
+    row.querySelectorAll("input").forEach(input => {
+  input.addEventListener("input", saveInputsToLocalStorage);
+});
+
+    document.querySelectorAll("#Vertretungsplanung input").forEach(input => {
+    input.addEventListener("input", saveInputsToLocalStorage);
+    });
+
     loadInputsFromLocalStorage();
 
   </script>
