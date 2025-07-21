@@ -126,11 +126,13 @@
     data.push({ date, inputs });
   });
 
-  localStorage.setItem("arbeitszeiten", JSON.stringify(data));
+localStorage.setItem(`arbeitszeiten_${year}`, JSON.stringify(data));
+
 }
 
 function loadInputsFromLocalStorage() {
-  const data = JSON.parse(localStorage.getItem("arbeitszeiten") || "[]");
+const data = JSON.parse(localStorage.getItem(`arbeitszeiten_${year}`) || "[]");
+
 
   data.forEach(entry => {
     const row = document.querySelector(`tr[data-date='${entry.date}']`);
@@ -174,10 +176,13 @@ function loadInputsFromLocalStorage() {
       }
     }
 
-    function changeYear() {
-      const selectedYear = document.getElementById("yearSelect").value;
-      generateDates(selectedYear);
-    }
+function changeYear() {
+  saveInputsToLocalStorage(); // Speichern vor dem Wechsel
+  const selectedYear = document.getElementById("yearSelect").value;
+  generateDates(selectedYear);
+  loadInputsFromLocalStorage(); // Eingaben wiederherstellen
+}
+
 
     function jumpToToday() {
       const today = new Date();
